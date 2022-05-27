@@ -1,0 +1,19 @@
+{
+  "name": "api-mongodb-tom",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node index.js",
+    "prod": "node index.js production"
+  },
+  "author": "Cyril Vimard",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "crypto": "^1.0.1",
+    "express": "^4.18.0",
+    "mongoose": "^6.3.1"
+  },
+  "type": "module"
+}
