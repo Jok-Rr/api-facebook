@@ -16,7 +16,7 @@ const Schema = new mongoose.Schema({
   },
   imageCover: {
     type: String,
-    require: [true, 'Password is required']
+    require: [true, 'Image cover is required']
   },
   type: {
     type: String,
@@ -29,7 +29,18 @@ const Schema = new mongoose.Schema({
   createEventAllow: {
     type: Boolean,
     require: [true, 'Permission to create event is required'],
-  }
+  },
+  members: [
+    {
+      _id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+      },
+      role: {
+        type: String
+      }
+    }
+  ]
 }, {
   collection: 'groups',
   minimize: true,

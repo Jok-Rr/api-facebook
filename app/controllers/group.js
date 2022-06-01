@@ -121,7 +121,38 @@ const Group = class Group {
     })
   }
 
+  addMember() {
+    this.app.post('/group/:id/member/add/', (req, res) => {
+      try {
+        if (!req.params.id) {
+          res.status(400).json({
+            status: 400,
+            message: 'bad request: Please use a id in the query string parameters'
+          });
 
+          return;
+        }
+
+        this.GroupModel.updateMany({ _id: req.params.id }, {
+          $push: {
+            members: req.body.members
+          }
+        }, { upsert: true }).then((group) => {
+          res.status(200).json(group || {});
+        }).catch((err) => {
+          res.status(400).json({
+            status: 400,
+            message: err
+          });
+        });
+      } catch (err) {
+        res.status(400).json({
+          status: 400,
+          message: err
+        })
+      }
+    })
+  }
   run() {
     this.create();
     this.read();
