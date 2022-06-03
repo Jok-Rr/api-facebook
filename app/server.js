@@ -57,6 +57,7 @@ class Server {
     new routes.Group(this.app, this.connect);
     new routes.Event(this.app, this.connect);
     new routes.Thread(this.app, this.connect);
+    new routes.Survey(this.app, this.connect);
 
     this.app.use((req, res) => {
       res.status(404).json({

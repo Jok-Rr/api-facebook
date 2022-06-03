@@ -14,10 +14,6 @@ const Schema = new mongoose.Schema({
   },
   messages: [
     {
-      // message_id: {
-      //   type: mongoose.ObjectId,
-      //   default: new mongoose.Types.ObjectId()
-      // },
       content: {
         type: String,
         require: [true, 'content is required']
@@ -27,10 +23,6 @@ const Schema = new mongoose.Schema({
         ref: 'User'
       },
       comments: [{
-        // comment_id: {
-        //   type: mongoose.ObjectId,
-        //   default: new mongoose.Types.ObjectId()
-        // },
         author: {
           type: mongoose.ObjectId,
           ref: 'User'

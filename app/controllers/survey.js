@@ -1,22 +1,22 @@
-import ThreadModel from '../models/thread.js';
+import SurveyModel from '../models/survey.js';
 
-const Thread = class Thread {
+const Survey = class Survey {
   constructor(app, connect) {
     this.app = app;
-    this.ThreadModel = connect.model('Thread', ThreadModel);
+    this.SurveyModel = connect.model('Survey', SurveyModel);
 
     this.run();
   }
 
   create() {
-    this.app.post('/thread/create', (req, res) => {
+    this.app.post('/survey/create', (req, res) => {
       try {
 
-        const ThreadModel = new this.ThreadModel(req.body);
+        const SurveyModel = new this.SurveyModel(req.body);
 
-        ThreadModel.save().then((thread) => {
+        SurveyModel.save().then((survey) => {
 
-          res.status(200).json(thread || {});
+          res.status(200).json(survey || {});
 
         }).catch((err) => {
 
@@ -35,7 +35,7 @@ const Thread = class Thread {
   }
 
   read() {
-    this.app.get('/thread/view/:id', (req, res) => {
+    this.app.get('/survey/view/:id', (req, res) => {
       try {
         if (!req.params.id) {
           res.status(400).json({
@@ -46,8 +46,37 @@ const Thread = class Thread {
           return;
         }
 
-        this.ThreadModel.findById(req.params.id).then((thread) => {
-          res.status(200).json(thread || {});
+        this.SurveyModel.findById(req.params.id).then((survey) => {
+          res.status(200).json(survey || {});
+        }).catch((err) => {
+          res.status(400).json({
+            status: 400,
+            message: err
+          });
+        });
+      } catch (err) {
+        res.status(400).json({
+          status: 400,
+          message: err
+        })
+      }
+    })
+  }
+
+  update() {
+    this.app.put('/survey/update/:id', (req, res) => {
+      try {
+        if (!req.params.id) {
+          res.status(400).json({
+            status: 400,
+            message: 'bad request: Please use a id in the query string parameters'
+          });
+
+          return;
+        }
+
+        this.SurveyModel.findOneAndUpdate({ _id: req.params.id }, { $set: req.body }).then((event) => {
+          res.status(200).json(event || {});
         }).catch((err) => {
           res.status(400).json({
             status: 400,
@@ -64,7 +93,7 @@ const Thread = class Thread {
   }
 
   delete() {
-    this.app.delete('/thread/delete/:id', (req, res) => {
+    this.app.delete('/survey/delete/:id', (req, res) => {
       try {
         if (!req.params.id) {
           res.status(400).json({
@@ -75,8 +104,8 @@ const Thread = class Thread {
           return;
         }
 
-        this.ThreadModel.deleteOne({ "_id": req.params.id }).then((thread) => {
-          res.status(200).json(thread || {});
+        this.SurveyModel.deleteOne({ "_id": req.params.id }).then((survey) => {
+          res.status(200).json(survey || {});
         }).catch((err) => {
           res.status(400).json({
             status: 400,
@@ -92,8 +121,8 @@ const Thread = class Thread {
     })
   }
 
-  addMessage() {
-    this.app.post('/thread/:id/message/add', (req, res) => {
+  addReply() {
+    this.app.post('/survey/:id/reply/add', (req, res) => {
       try {
         if (!req.params.id) {
           res.status(400).json({
@@ -102,53 +131,18 @@ const Thread = class Thread {
           });
           return;
         }
-        this.ThreadModel.updateMany({ _id: req.params.id }, {
+        this.SurveyModel.updateMany({ _id: req.params.id }, {
           $push: {
-            messages: req.body.messages
+            replys: req.body.replys
           }
-        }, { upsert: true }).then((thread) => {
-          res.status(200).json(thread || {});
+        }, { upsert: true }).then((survey) => {
+          res.status(200).json(survey || {});
         }).catch((err) => {
           res.status(400).json({
             status: 400,
             message: err
           });
         });
-      } catch (err) {
-        res.status(400).json({
-          status: 400,
-          message: err
-        })
-      }
-    })
-  }
-
-  addComment() {
-    this.app.post('/thread/:id/comment/:idMessage', (req, res) => {
-      try {
-        if (!req.params.id) {
-          res.status(400).json({
-            status: 400,
-            message: 'bad request: Please use a id in the query string parameters'
-          });
-
-          return;
-        }
-
-        this.ThreadModel.updateMany(
-          { '_id': req.params.id, 'messages._id': req.params.idMessage },
-          { $push: { 'messages.$.comments': req.body.comments } },
-          { upsert: true }).then((event) => {
-
-            res.status(200).json(event || {});
-
-          }).catch((err) => {
-            res.status(400).json({
-              status: 400,
-              message: err
-            });
-          });
-
       } catch (err) {
         res.status(400).json({
           status: 400,
@@ -160,11 +154,11 @@ const Thread = class Thread {
 
   run() {
     this.create();
+    this.update();
     this.read();
     this.delete();
-    this.addMessage();
-    this.addComment();
+    this.addReply();
   }
 }
 
-export default Thread;
+export default Survey;
