@@ -1,22 +1,23 @@
-import EventModel from '../models/event.js';
 import ThreadModel from '../models/thread.js';
 
-const Event = class Event {
+const Thread = class Thread {
   constructor(app, connect) {
     this.app = app;
-    this.EventModel = connect.model('Event', EventModel);
+    this.ThreadModel = connect.model('Thread', ThreadModel);
 
     this.run();
   }
 
   create() {
-    this.app.post('/event/create', (req, res) => {
+    this.app.post('/thread/create', (req, res) => {
       try {
 
-        const EventModel = new this.EventModel(req.body);
-        EventModel.save().then((event) => {
+        const ThreadModel = new this.ThreadModel(req.body);
 
-          res.status(200).json(event || {});
+        ThreadModel.save().then((thread) => {
+
+          res.status(200).json(thread || {});
+
         }).catch((err) => {
 
           res.status(400).json({
@@ -34,7 +35,7 @@ const Event = class Event {
   }
 
   read() {
-    this.app.get('/event/view/:id', (req, res) => {
+    this.app.get('/thread/view/:id', (req, res) => {
       try {
         if (!req.params.id) {
           res.status(400).json({
@@ -45,37 +46,8 @@ const Event = class Event {
           return;
         }
 
-        this.EventModel.findById(req.params.id).then((event) => {
-          res.status(200).json(event || {});
-        }).catch((err) => {
-          res.status(400).json({
-            status: 400,
-            message: err
-          });
-        });
-      } catch (err) {
-        res.status(400).json({
-          status: 400,
-          message: err
-        })
-      }
-    })
-  }
-
-  update() {
-    this.app.put('/event/update/:id', (req, res) => {
-      try {
-        if (!req.params.id) {
-          res.status(400).json({
-            status: 400,
-            message: 'bad request: Please use a id in the query string parameters'
-          });
-
-          return;
-        }
-
-        this.EventModel.findOneAndUpdate({ _id: req.params.id }, { $set: req.body }, { upsert: true }).then((event) => {
-          res.status(200).json(event || {});
+        this.ThreadModel.findById(req.params.id).then((thread) => {
+          res.status(200).json(thread || {});
         }).catch((err) => {
           res.status(400).json({
             status: 400,
@@ -92,7 +64,7 @@ const Event = class Event {
   }
 
   delete() {
-    this.app.delete('/event/delete/:id', (req, res) => {
+    this.app.delete('/thread/delete/:id', (req, res) => {
       try {
         if (!req.params.id) {
           res.status(400).json({
@@ -103,8 +75,8 @@ const Event = class Event {
           return;
         }
 
-        this.EventModel.deleteOne({ "_id": req.params.id }).then((event) => {
-          res.status(200).json(event || {});
+        this.ThreadModel.deleteOne({ "_id": req.params.id }).then((thread) => {
+          res.status(200).json(thread || {});
         }).catch((err) => {
           res.status(400).json({
             status: 400,
@@ -120,24 +92,22 @@ const Event = class Event {
     })
   }
 
-  addMember() {
-    this.app.post('/event/:id/member/add', (req, res) => {
+  addMessage() {
+    this.app.post('/thread/:id/message/add', (req, res) => {
       try {
         if (!req.params.id) {
           res.status(400).json({
             status: 400,
             message: 'bad request: Please use a id in the query string parameters'
           });
-
           return;
         }
-
-        this.EventModel.updateMany({ _id: req.params.id }, {
+        this.ThreadModel.updateMany({ _id: req.params.id }, {
           $push: {
-            members: req.body.members
+            messages: req.body.messages
           }
-        }, { upsert: true }).then((event) => {
-          res.status(200).json(event || {});
+        }, { upsert: true }).then((thread) => {
+          res.status(200).json(thread || {});
         }).catch((err) => {
           res.status(400).json({
             status: 400,
@@ -153,10 +123,46 @@ const Event = class Event {
     })
   }
 
-  // deleteMember() {
-  //   this.app.post('/event/:id/member/delete/:idMember', (req, res) => {
+  addComment() {
+    this.app.post('/thread/:id/comment/:idMessage', (req, res) => {
+      try {
+        if (!req.params.id) {
+          res.status(400).json({
+            status: 400,
+            message: 'bad request: Please use a id in the query string parameters'
+          });
+
+          return;
+        }
+
+        this.ThreadModel.updateMany(
+          { '_id': req.params.id, 'messages._id': req.params.idMessage },
+          { $push: { 'messages.$.comments': req.body.comments } },
+          { upsert: true }).then((event) => {
+
+            res.status(200).json(event || {});
+
+          }).catch((err) => {
+            res.status(400).json({
+              status: 400,
+              message: err
+            });
+          });
+
+      } catch (err) {
+        res.status(400).json({
+          status: 400,
+          message: err
+        })
+      }
+    })
+  }
+
+
+  // deleteMessage() {
+  //   this.app.post('/thread/:id/message/delete/:idMessage', (req, res) => {
   //     try {
-  //       if (!req.params.id && !req.params.idMember) {
+  //       if (!req.params.id && !req.params.idMessage) {
   //         res.status(400).json({
   //           status: 400,
   //           message: 'bad request: Please use a id in the query string parameters'
@@ -165,12 +171,12 @@ const Event = class Event {
   //         return;
   //       }
 
-  //       this.EventModel.update({ _id: req.params.id }, {
-  //         $unset: {
-  //           "members.$[]._id": req.params.idMember
+  //       this.ThreadModel.updateOne({ _id: req.params.id }, {
+  //         $pullAll: {
+  //           "messages.$._id": req.params.idMessage
   //         }
-  //       }, false, true).then((event) => {
-  //         res.status(200).json(event || {});
+  //       }).then((thread) => {
+  //         res.status(200).json(thread || {});
   //       }).catch((err) => {
   //         res.status(400).json({
   //           status: 400,
@@ -188,12 +194,13 @@ const Event = class Event {
 
   run() {
     this.create();
+    this.findOne();
     this.read();
-    this.update();
     this.delete();
-    this.addMember();
-    // this.deleteMember();
+    this.addMessage();
+    this.addComment();
+    this.deleteMessage();
   }
 }
 
-export default Event;
+export default Thread;

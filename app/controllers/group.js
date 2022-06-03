@@ -122,7 +122,7 @@ const Group = class Group {
   }
 
   addMember() {
-    this.app.post('/group/:id/member/add/', (req, res) => {
+    this.app.post('/group/:id/member/add', (req, res) => {
       try {
         if (!req.params.id) {
           res.status(400).json({
@@ -158,6 +158,7 @@ const Group = class Group {
     this.read();
     this.update();
     this.delete();
+    this.addMember();
   }
 }
 
