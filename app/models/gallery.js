@@ -13,20 +13,24 @@ const Schema = new mongoose.Schema({
   album: [
     {
       photo: {
-        type: String
+        type: String,
+        require: true
       },
       author: {
         type: mongoose.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        require: true
       },
       comments: [
         {
           author: {
             type: mongoose.ObjectId,
-            ref: 'User'
+            ref: 'User',
+            require: true
           },
           content: {
-            type: String
+            type: String,
+            require: true
           }
         }
       ]

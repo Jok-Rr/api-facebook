@@ -28,16 +28,18 @@ const Schema = new mongoose.Schema({
   },
   createEventAllow: {
     type: Boolean,
-    require: [true, 'Permission to create event is required'],
+    require: [true, 'Permission to create event is required']
   },
   members: [
     {
       _id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        require: true
       },
       role: {
-        type: String
+        type: String,
+        require: true
       }
     }
   ]

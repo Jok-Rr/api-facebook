@@ -5,12 +5,14 @@ const Schema = new mongoose.Schema({
   event_id: {
     type: mongoose.ObjectId,
     ref: 'Event',
-    default: null
+    default: null,
+    require: true
   },
   group_id: {
     type: mongoose.ObjectId,
     ref: 'Group',
-    default: null
+    default: null,
+    require: true
   },
   messages: [
     {
@@ -20,12 +22,14 @@ const Schema = new mongoose.Schema({
       },
       author: {
         type: mongoose.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        require: true
       },
       comments: [{
         author: {
           type: mongoose.ObjectId,
-          ref: 'User'
+          ref: 'User',
+          require: true
         },
         content: {
           type: String,

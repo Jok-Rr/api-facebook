@@ -12,16 +12,19 @@ const Schema = new mongoose.Schema({
   },
   author: {
     type: mongoose.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    require: true
   },
   questions: [
     {
       question: {
-        type: String
+        type: String,
+        require: true
       },
       responses: [{
         resp: {
-          type: String
+          type: String,
+          require: true
         }
       }]
     }
@@ -29,13 +32,16 @@ const Schema = new mongoose.Schema({
   replys: [{
     author: {
       type: mongoose.ObjectId,
-      ref: 'User'
+      ref: 'User',
+      require: true
     },
     question: {
-      type: mongoose.ObjectId
+      type: mongoose.ObjectId,
+      require: true
     },
     reply: {
-      type: mongoose.ObjectId
+      type: mongoose.ObjectId,
+      require: true
     }
   }]
 }, {

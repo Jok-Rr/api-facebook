@@ -33,10 +33,12 @@ const Schema = new mongoose.Schema({
     {
       _id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        require: true
       },
       role: {
-        type: String
+        type: String,
+        require: true
       }
     }
   ]

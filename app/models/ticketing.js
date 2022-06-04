@@ -9,34 +9,42 @@ const Schema = new mongoose.Schema({
   tickets: [
     {
       name: {
-        type: String
+        type: String,
+        require: true
       },
       amount: {
-        type: Number
+        type: Number,
+        require: true
 
       },
       quantity: {
-        type: Number
+        type: Number,
+        require: true
       }
     }
   ],
   purchases: [
     {
       ticket_name: {
-        type: String
+        type: String,
+        require: true
       },
       firstname: {
-        type: String
+        type: String,
+        require: true
       },
       lastname: {
-        type: String
+        type: String,
+        require: true
       },
       address: {
-        type: String
+        type: String,
+        require: true
       },
       purchase_date: {
         type: Date,
-        default: Date.now
+        default: Date.now,
+        require: true
       }
 
 
