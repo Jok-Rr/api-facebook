@@ -7,7 +7,7 @@
     "dev": "node index.js",
     "prod": "node index.js production"
   },
-  "author": "Cyril Vimard",
+  "author": "Tom Bost",
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.20.0",
