@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const Schema = new mongoose.Schema({
-  eventName: {
+  name: {
     type: String,
     require: [true, 'Group name is required']
   },

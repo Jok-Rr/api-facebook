@@ -2,42 +2,36 @@ import mongoose from 'mongoose';
 
 
 const Schema = new mongoose.Schema({
-  event_id: {
-    type: mongoose.ObjectId,
-    ref: 'Event',
-    default: null,
-    require: true
-  },
-  group_id: {
-    type: mongoose.ObjectId,
-    ref: 'Group',
-    default: null,
-    require: true
-  },
-  messages: [
-    {
-      content: {
-        type: String,
-        require: [true, 'content is required']
-      },
-      author: {
-        type: mongoose.ObjectId,
-        ref: 'User',
-        require: true
-      },
-      comments: [{
-        author: {
-          type: mongoose.ObjectId,
-          ref: 'User',
-          require: true
-        },
-        content: {
-          type: String,
-          require: [true, 'cCntent is required']
-        }
-      }]
+  link: {
+    type: {
+      type: String,
+      default: 'group'
+    },
+    link_id: {
+      type: mongoose.ObjectId,
+      default: mongoose.ObjectId,
     }
-  ]
+  },
+  message: {
+    content: {
+      type: String,
+      require: [true, 'content is required']
+    },
+    author_id: {
+      type: mongoose.ObjectId,
+      ref: 'User',
+      require: true
+    },
+    create_at: {
+      type: Date,
+      default: Date.now
+    },
+    comment_id: {
+      type: mongoose.ObjectId,
+      ref: 'User',
+      default: null,
+    }
+  }
 }, {
   collection: 'threads',
   minimize: true,

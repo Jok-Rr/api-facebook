@@ -25,27 +25,40 @@ const Schema = new mongoose.Schema({
   ],
   purchases: [
     {
-      ticket_name: {
-        type: String,
-        require: true
+      ticket_id: {
+        type: mongoose.ObjectId
       },
-      firstname: {
-        type: String,
-        require: true
+      contact: {
+        externalBuyer: {
+          type: Boolean,
+          default: false
+        },
+        exterior: {
+          firstname: {
+            type: String,
+            require: true
+          },
+          lastname: {
+            type: String,
+            require: true
+          },
+          address: {
+            type: String,
+            require: true
+          },
+          purchase_date: {
+            type: Date,
+            default: Date.now
+          }
+        },
+        internal: {
+          user_id: {
+            type: mongoose.ObjectId,
+            ref: 'User'
+          }
+        }
       },
-      lastname: {
-        type: String,
-        require: true
-      },
-      address: {
-        type: String,
-        require: true
-      },
-      purchase_date: {
-        type: Date,
-        default: Date.now,
-        require: true
-      }
+
 
 
     }

@@ -18,6 +18,7 @@ const Schema = new mongoose.Schema({
   password: {
     type: String,
     require: [true, 'Password is required'],
+    match: [/(?=.\d)(?=.[a-z])(?=.*[A-Z])/],
     minlength: [8, 'Password must be more than 8 characters']
   },
   email: {
